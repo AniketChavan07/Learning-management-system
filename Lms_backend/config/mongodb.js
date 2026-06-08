@@ -8,4 +8,4 @@ const connectdb = async ()=>{
     await mongoose.connect(`${process.env.MONGODB_URL}/lms`)
 } 
 
-export default connectdb     
+export default connectdb 

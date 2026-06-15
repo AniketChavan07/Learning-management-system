@@ -18,7 +18,7 @@ app.get('/', (req,res)=>
     res.send("Api working")
 )
 // add a controller route 
-app.post('/clerk',express.json(),clerkhooks)
+app.post('/clerk',express.raw({type: 'application/json'}),clerkhooks)
 
 // port
 const PORT = process.env.PORT || 5000

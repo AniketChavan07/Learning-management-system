@@ -6,7 +6,7 @@ export const clerkhooks = async (req, res) => {
     const webhook = new Webhook(process.env.CLERK_WEB_HOOK);
 
     const payload = webhook.verify(
-      JSON.stringify(req.body),
+      req.body.toString(),
       {
         "svix-id": req.headers["svix-id"],
         "svix-timestamp": req.headers["svix-timestamp"],
@@ -22,7 +22,7 @@ export const clerkhooks = async (req, res) => {
           _id: data.id,
           email: data.email_addresses[0].email_address,
           name: `${data.first_name} ${data.last_name}`,
-          imgurl: data.image_url,
+          imageUrl: data.image_url,
         };
 
         await User.create(userdata);
@@ -33,7 +33,7 @@ export const clerkhooks = async (req, res) => {
         const userdata = {
           email: data.email_addresses[0].email_address,
           name: `${data.first_name} ${data.last_name}`,
-          imgurl: data.image_url,
+          imageUrl: data.image_url,
         };
 
         await User.findByIdAndUpdate(data.id, userdata);

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { dummyCourses } from "../assets/assets";
 import humanizeDuration from "humanize-duration";
-
+import {useAuth,useUser} from "@clerk/clerk-react"
 export const Appcontext = createContext();
 
 export const Appcontextprovider = ({ children }) => {
@@ -13,6 +13,9 @@ export const Appcontextprovider = ({ children }) => {
   const [allcourse, setcourse] = useState([]);
   const [iseducator, setiseducator] = useState(true);
   const [enrolled,setenrolled]= useState(true);
+
+const {getToken} = useAuth()
+const {user} = useUser()
 
   // Fetch Courses
   const fetchallcourse = async () => {
@@ -39,6 +42,16 @@ const fetchenrollement =async ()=>{
     fetchallcourse();
     fetchenrollement()
   }, []);
+
+  const logToken = async () =>{
+    console.log(await getToken())
+  }
+
+  useEffect(()=>{
+    if(user){
+      logToken()
+    }
+  },[user])
 
 //calculate chapter time
 const calculatechaptertime = (chapter)=>{

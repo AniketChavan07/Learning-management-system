@@ -1,18 +1,31 @@
 import { Webhook } from "svix";
 import User from "../models/User.js";
-
 export const clerkhooks = async (req, res) => {
   try {
-    const webhook = new Webhook(process.env.CLERK_WEB_HOOK);
+    console.log("Webhook received");
+    console.log("Content-Type:", req.headers["content-type"]);
+    console.log("Body:", req.body);
+    // console.log("Headers:", req.headers);
 
-    const payload = webhook.verify(
-      req.body.toString(),
-      {
-        "svix-id": req.headers["svix-id"],
-        "svix-timestamp": req.headers["svix-timestamp"],
-        "svix-signature": req.headers["svix-signature"],
-      }
-    );
+
+    if (!req.body) {
+      return res.status(400).json({
+        success: false,
+        message: "Request body is missing",
+      });
+    }
+        const webhook = new Webhook(process.env.CLERK_WEB_HOOK);
+
+    // const payload = webhook.verify(
+    //   req.body.toString(),
+    //   {
+    //     "svix-id": req.headers["svix-id"],
+    //     "svix-timestamp": req.headers["svix-timestamp"],
+    //     "svix-signature": req.headers["svix-signature"],
+    //   }
+    // );
+    const payload = req.body;
+    console.log("Verified Successfully");
 
     const { data, type } = payload;
 

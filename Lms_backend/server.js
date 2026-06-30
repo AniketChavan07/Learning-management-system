@@ -5,9 +5,10 @@ import connectdb from "./config/mongodb.js";
 import { clerkMiddleware } from "@clerk/express";
 import educatorRoute from "./routes/educatorroute.js";
 import courseRoute from "./routes/courseroute.js";
-import { clerkhooks } from "./Controllers/webhooks.js";
+import { clerkhooks, stripeWebhook } from "./Controllers/webhooks.js";
 import connectcloudinary from "./config/cloudinary.js";
 import userroute from "./routes/userroute.js";
+import Stripe from "stripe";
 
 const app = express();
 
@@ -32,6 +33,13 @@ app.post(
   express.raw({ type: "application/json" }),
   clerkhooks
 );
+
+app.post(
+  "/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhook
+);
+
 
 const PORT = process.env.PORT || 5000;
 

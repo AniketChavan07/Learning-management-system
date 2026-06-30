@@ -1,5 +1,7 @@
 import { Webhook } from "svix";
 import User from "../models/User.js";
+import Stripe from "stripe";
+import Purchase from "../models/Purchase.js";
 export const clerkhooks = async (req, res) => {
   try {
     console.log("Webhook received");
@@ -69,4 +71,77 @@ export const clerkhooks = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+export const stripeWebhook = async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+
+    let event;
+
+    try {
+
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+
+    } catch (err) {
+
+        console.log(err.message);
+
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+
+    }
+
+    // Payment Successful
+    if (event.type === "checkout.session.completed") {
+
+        const session = event.data.object;
+
+        try {
+
+            // Get purchase id stored in metadata
+            const purchaseId = session.metadata.purchaseId;
+
+            // Find purchase
+            const purchase = await Purchase.findById(purchaseId);
+
+            if (!purchase) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Purchase not found"
+                });
+            }
+
+            // Update purchase status
+            purchase.status = "completed";
+
+            await purchase.save();
+
+            // Enroll user
+            await User.findByIdAndUpdate(
+                purchase.userId,
+                {
+                    $addToSet: {
+                        enrolledCourses: purchase.courseId
+                    }
+                }
+            );
+
+            console.log("Payment Verified");
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+    res.json({ received: true });
 };

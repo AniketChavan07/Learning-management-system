@@ -4,8 +4,10 @@ import "dotenv/config";
 import connectdb from "./config/mongodb.js";
 import { clerkMiddleware } from "@clerk/express";
 import educatorRoute from "./routes/educatorroute.js";
+import courseRoute from "./routes/courseroute.js";
 import { clerkhooks } from "./Controllers/webhooks.js";
 import connectcloudinary from "./config/cloudinary.js";
+import userroute from "./routes/userroute.js";
 
 const app = express();
 
@@ -21,6 +23,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/educator", educatorRoute);
+app.use("/api/course", courseRoute);
+app.use("/api/users",userroute);
+
 
 app.post(
   "/clerk",

@@ -101,17 +101,7 @@ export const getcourse = async (req ,res)=>{
   }
 }
 
-// get educator course id 
-export const getcourseid = async (req,res) =>{
-  try {
-    const {id} = req.params
-    const course = await Course.findById(id);
 
-    return res.status(200).json ({message:`Course fetch ${id}`})
-  } catch (error) {
-    return res.status (500).json({message:"internal server error", error})
-  }
-}
 
 // get educator dashboard data (total earning ,no of studenets ,no of courses)
 

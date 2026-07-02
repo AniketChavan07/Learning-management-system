@@ -12,7 +12,6 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.61.8",
     "@clerk/react": "^6.7.2",
-    "axios": "^1.18.1",
     "humanize-duration": "^3.33.2",
     "lucide-react": "^1.17.0",
     "rc-progress": "^4.0.0",

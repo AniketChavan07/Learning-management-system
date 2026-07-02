@@ -6,7 +6,7 @@ import React from "react";
  import App from "./App.jsx"; 
  import { Appcontextprovider } from "./context/Appcontext.jsx";
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-console.log("Clerk Key:", clerkPubKey);
+
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>

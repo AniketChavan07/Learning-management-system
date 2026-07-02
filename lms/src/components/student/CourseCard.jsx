@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom'
 const CourseCard = ({ course }) => {
 
   const { currency ,ratings} = useContext(Appcontext)
-  console.log("Rating Value:", ratings(course));
+  const originalPrice = Number(course?.coursePrice || 0)
+  const discount = Number(course?.discount || 0)
+  const finalPrice = discount > 0 ? originalPrice - (originalPrice * discount) / 100 : originalPrice
 
   return (
     <Link
@@ -63,12 +65,12 @@ const CourseCard = ({ course }) => {
         <div className="mt-5 flex items-center gap-3">
           <span className="text-2xl font-bold text-blue-600">
             {currency}
-            {(course.coursePrice - course.courseDiscountedPrice).toFixed(2)}
+            {finalPrice.toFixed(2)}
           </span>
 
           <span className="text-sm text-gray-400 line-through">
             {currency}
-            {course.coursePrice}
+            {originalPrice.toFixed(2)}
           </span>
         </div>
 
